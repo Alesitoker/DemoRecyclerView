@@ -31,9 +31,11 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Give viewModel to binding.
         // TODO: Give lifecycle to binding.
         setupViews();
-        List<Student> students = viewModel.getStudents(false);
-        listAdapter.submitList(students);
-        b.lblEmptyView.setVisibility(students.size() == 0 ? View.VISIBLE : View.INVISIBLE);
+        viewModel.getStudents(false).observe(this, students -> {
+            listAdapter.submitList(students);
+            b.lblEmptyView.setVisibility(students.size() == 0 ? View.VISIBLE : View.INVISIBLE);
+        });
+
     }
 
     private void setupViews() {
@@ -52,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteStudent(Student student) {
         viewModel.deleteStudent(student);
-        List<Student> students = viewModel.getStudents(true);
-        listAdapter.submitList(students);
-        b.lblEmptyView.setVisibility(students.size() == 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
 }
