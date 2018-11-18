@@ -20,6 +20,10 @@ public class Database {
                 new Student((long) 0, "Baldo", 23),
                 new Student((long) 1, "German", 28)
         ));
+        updateStudentsLiveData();
+    }
+
+    private void updateStudentsLiveData() {
         studentsLiveData.setValue(new ArrayList<>(students));
     }
 
@@ -29,7 +33,7 @@ public class Database {
 
     public void deleteStudent(Student student) {
         students.remove(student);
-        studentsLiveData.setValue(new ArrayList<>(students));
+        updateStudentsLiveData();
     }
 
 // TODO: Add method to query students table.

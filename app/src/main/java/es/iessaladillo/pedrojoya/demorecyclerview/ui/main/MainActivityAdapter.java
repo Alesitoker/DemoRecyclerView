@@ -1,5 +1,6 @@
 package es.iessaladillo.pedrojoya.demorecyclerview.ui.main;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +11,30 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import es.iessaladillo.pedrojoya.demorecyclerview.R;
 import es.iessaladillo.pedrojoya.demorecyclerview.data.local.model.Student;
 
-public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.ViewHolder> {
+public class MainActivityAdapter extends ListAdapter<Student, MainActivityAdapter.ViewHolder> {
 
-    private List<Student> data = new ArrayList<>();
     private final OnStudentClickListener onStudentClickListener;
 
     public MainActivityAdapter(OnStudentClickListener onStudentClickListener) {
+        super(new DiffUtil.ItemCallback<Student>() {
+            @Override
+            //
+            public boolean areItemsTheSame(@NonNull Student oldItem, @NonNull Student newItem) {
+                return oldItem.getId() == newItem.getId();
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull Student oldItem, @NonNull Student newItem) {
+                return TextUtils.equals(oldItem.getName(), newItem.getName()) &&
+                        oldItem.getAge() == newItem.getAge();
+            }
+        });
         this.onStudentClickListener = onStudentClickListener;
     }
 
@@ -32,27 +47,19 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(data.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return data == null ? 0 : data.size();
+        holder.bind(getItem(position));
     }
 
     @Override
     public long getItemId(int position) {
-        return data.get(position).getId();
+        return getItem(position).getId();
     }
 
+    @Override
     public Student getItem(int position) {
-       return data.get(position);
+        return super.getItem(position);
     }
 
-    public void submitList(@NonNull List<Student> newData) {
-        data = newData;
-        notifyDataSetChanged();
-    }
     static class ViewHolder extends RecyclerView.ViewHolder{
 
         private final TextView lblName;

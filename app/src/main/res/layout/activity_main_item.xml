@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/llRoot"
+    android:id="@+id/cvRoot"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/Item_padding"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    >
 
-    <TextView
-        android:id="@+id/lblName"
+    <LinearLayout
+        android:id="@+id/lLayout"
+        android:padding="@dimen/Item_padding"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text = "@tools:sample/full_names"
-        />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/lblAge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="18"
-        />
-</LinearLayout>
+        <TextView
+            android:id="@+id/lblName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text = "@tools:sample/full_names"
+            />
+
+        <TextView
+            android:id="@+id/lblAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="18"
+            />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

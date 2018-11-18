@@ -6,11 +6,14 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import es.iessaladillo.pedrojoya.demorecyclerview.R;
 import es.iessaladillo.pedrojoya.demorecyclerview.data.local.Database;
 import es.iessaladillo.pedrojoya.demorecyclerview.data.local.model.Student;
@@ -31,11 +34,16 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Give viewModel to binding.
         // TODO: Give lifecycle to binding.
         setupViews();
-        viewModel.getStudents(false).observe(this, students -> {
-            listAdapter.submitList(students);
-            b.lblEmptyView.setVisibility(students.size() == 0 ? View.VISIBLE : View.INVISIBLE);
-        });
+        observeStudents();
+    }
 
+    private void observeStudents() {
+        viewModel.getStudents(false).observe(this, this::refresherListAdapter);
+    }
+
+    private void refresherListAdapter(List<Student> students) {
+        listAdapter.submitList(students);
+        b.lblEmptyView.setVisibility(students.size() == 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void setupViews() {
@@ -43,17 +51,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        listAdapter = new MainActivityAdapter(position -> deleteStudent(listAdapter.getItem(position)));
+        listAdapter = new MainActivityAdapter(position -> showStudent(listAdapter.getItem(position)));
         // TODO: Set listeners of adapter.
         b.lstStudents.setHasFixedSize(true);
         b.lstStudents.setLayoutManager(new GridLayoutManager(this,
                 getResources().getInteger(R.integer.main_lstStudents_columns)));
         b.lstStudents.setItemAnimator(new DefaultItemAnimator());
         b.lstStudents.setAdapter(listAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0, /*ItemTouchHelper.START |*/ ItemTouchHelper.END) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        // prueba para direction no tiene sentido en este caso
+//                        if (direction == ItemTouchHelper.END) {
+                            viewModel.deleteStudent(listAdapter.getItem(viewHolder.getAdapterPosition()));
+//                        } else {
+//                            showStudent(listAdapter.getItem(viewHolder.getAdapterPosition()));
+//                        }
+                    }
+                });
+        itemTouchHelper.attachToRecyclerView(b.lstStudents);
     }
 
-    private void deleteStudent(Student student) {
-        viewModel.deleteStudent(student);
+    private void showStudent(Student student) {
+        Toast.makeText(this, student.getName(), Toast.LENGTH_SHORT).show();
     }
 
 }
