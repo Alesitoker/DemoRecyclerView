@@ -68,10 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                        // prueba para direction no tiene sentido en este caso
-//                        if (direction == ItemTouchHelper.END) {
+                        if (direction == ItemTouchHelper.END) {
                             viewModel.deleteStudent(listAdapter.getItem(viewHolder.getAdapterPosition()));
-//                        } else {
+                        }
+                        // prueba para direction no tiene sentido en este caso
+//                        else {
 //                            showStudent(listAdapter.getItem(viewHolder.getAdapterPosition()));
 //                        }
                     }
